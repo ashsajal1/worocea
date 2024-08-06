@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { db } from "@/db/drizzle";
 import { workSpace } from "@/db/schema";
 import { isNull } from "drizzle-orm";
+import WsDialog from "./ws-dialog";
 
 export default async function WS() {
     const workspaces = await db.select().from(workSpace).where(isNull(workSpace.deletedAt));
@@ -9,7 +9,7 @@ export default async function WS() {
     if (!workspaces.length) {
       return <>
         <h1>No workspaces found</h1>
-        <Button>Create workspace</Button>
+        <WsDialog />
       </>
     }
   return (
