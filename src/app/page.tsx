@@ -1,13 +1,15 @@
-import { db } from "@/db/drizzle";
-import { workSpace } from "@/db/schema";
-import { isNull } from "drizzle-orm";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+Button
 
-export default async function Home() {
-  const workspaces = await db.select().from(workSpace).where(isNull(workSpace.deletedAt));
-  console.log(workspaces)
+export default function Home() {
+
   return (
     <main>
       <h1>Welcome, this is home page!</h1>
+      <Link href={'/ws'}>
+        <Button>Go to workspace</Button>
+      </Link>
     </main>
   );
 }
