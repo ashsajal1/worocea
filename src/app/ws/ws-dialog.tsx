@@ -11,6 +11,8 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { WorkspaceTypes } from './ws-type';
 import { z } from 'zod';
 import ErrorText from '@/components/error-text';
+import {useTransition} from  'react'
+import { createWorkSpace } from './actions';
 
 const workspaceSchema = z.object({
     name: z.string().min(1, { message: "Workspace name is required" }),
@@ -20,12 +22,16 @@ const workspaceSchema = z.object({
 export type WorkspaceForm = z.infer<typeof workspaceSchema>;
 
 export default function WsDialog() {
+    const [pending, startTransition] = useTransition();
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<WorkspaceForm>({
         resolver: zodResolver(workspaceSchema),
     });
 
-    const onSubmit: SubmitHandler<WorkspaceForm> = (data) => {
-        console.log("Workspace created:", data);
+    const onSubmit: SubmitHandler<WorkspaceForm> = async (data) => {
+        // console.log("Workspace created:", data);
+        await startTransition(async () => {
+            await createWorkSpace(data)
+        }) 
         // Clear fields after submission if needed
         setValue('name', '');
         setValue('type', '');
@@ -43,11 +49,12 @@ export default function WsDialog() {
                 <Input
                     placeholder='Enter workspace name eg, Family, College...'
                     {...register('name')}
+                    disabled={pending}
                 />
                 {errors.name && <ErrorText text={errors.name.message as string} />}
 
                 <Label>Enter your workspace type:</Label>
-                <Select onValueChange={(value) => setValue('type', value)}>
+                <Select disabled={pending} onValueChange={(value) => setValue('type', value)}>
                     <SelectTrigger className='w-full'>
                         <SelectValue placeholder="Select type" />
                     </SelectTrigger>
@@ -66,11 +73,11 @@ export default function WsDialog() {
                 {errors.type && <ErrorText text={errors.type.message as string} />}
 
                 <DialogFooter>
-                    <DialogClose>
-                        <Button variant={'ghost'}>Cancel</Button>
+                    <DialogClose disabled={pending}>
+                        <Button disabled={pending} variant={'ghost'}>Cancel</Button>
                     </DialogClose>
 
-                    <Button onClick={handleSubmit(onSubmit)}>Create</Button>
+                    <Button disabled={pending} onClick={handleSubmit(onSubmit)}>{pending? "Creating":"Create"}</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
