@@ -29,6 +29,7 @@ export const createWorkSpace = async (data: WorkspaceForm) => {
     .values({
       id: 1,
       name: data.name,
+      type: data.type,
       creatorId: userId!,
       createdAt: new Date(),
       updatedAt: new Date(),

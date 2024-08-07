@@ -1,9 +1,14 @@
 import { Button } from "@/components/ui/button";
+import { db } from "@/db/drizzle";
+import { workSpace } from "@/db/schema";
 import Link from "next/link";
-Button
 
-export default function Home() {
+export default async function Home() {
 
+  const data = await db.delete(workSpace).returning({
+    id: workSpace.id
+  })
+  console.log(data)
   return (
     <main>
       <h1>Welcome, this is home page!</h1>

@@ -1,21 +1,79 @@
 {
-  "id": "cdf88cba-b73d-4fac-83b1-819c5d429e46",
-  "prevId": "da14a010-7001-48c3-a191-9b7f2f4d6a90",
+  "id": "30e9923e-82b2-404b-941b-ee524223d904",
+  "prevId": "9091371a-ceef-48d1-b791-87156a37e094",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.type": {
+      "name": "type",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.workspace_type": {
+      "name": "workspace_type",
+      "schema": "",
+      "columns": {
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type_id": {
+          "name": "type_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "workspace_type_workspace_id_type_id_pk": {
+          "name": "workspace_type_workspace_id_type_id_pk",
+          "columns": [
+            "workspace_id",
+            "type_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "public.workspace": {
       "name": "workspace",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "integer",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
         "name": {
           "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -30,13 +88,15 @@
           "name": "created_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": "now()"
         },
         "deleted_at": {
           "name": "deleted_at",
